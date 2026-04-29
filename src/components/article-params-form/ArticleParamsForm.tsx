@@ -6,6 +6,8 @@ import clsx from 'clsx';
 
 import { Separator } from 'src/ui/separator';
 import { Select } from 'src/ui/select';
+import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
+
 import { useState } from 'react';
 
 import * as articleProps from 'src/constants/articleProps';
@@ -17,10 +19,11 @@ import styles from './ArticleParamsForm.module.scss';
 
 
 export const ArticleParamsForm = () => {
-	const [backgroundColors, setBackgroundColors] = useState<articleProps.OptionType | null>(null); /* -----   описываем общие стейты и сеттеры к стейтам ------ */
-	const [contentWidthArr, setСontentWidthArr] = useState<articleProps.OptionType | null>(null);
-	const [fontFamilyOptions, setFontFamilyOptions] = useState<articleProps.OptionType | null>(null);
-	const [fontColors, setFontColors] = useState<articleProps.OptionType | null>(null);
+	const [backgroundColors, setBackgroundColors] = useState<articleProps.OptionType>(articleProps.defaultArticleState.backgroundColor); /* -----   описываем общие стейты и сеттеры к стейтам ------ */
+	const [contentWidthArr, setСontentWidthArr] = useState<articleProps.OptionType>(articleProps.defaultArticleState.contentWidth);
+	const [fontFamilyOptions, setFontFamilyOptions] = useState<articleProps.OptionType>(articleProps.defaultArticleState.fontFamilyOption);
+	const [fontColors, setFontColors] = useState<articleProps.OptionType>(articleProps.defaultArticleState.fontColor);
+	const [optionType, setOptionType] = useState<articleProps.OptionType>(articleProps.defaultArticleState.fontSizeOption);
 	
 	const [formOpen, setFormOpen] = useState(false);
 	/* const [containerStyles, setContainerStyles] = useState(styles.container);
@@ -35,12 +38,19 @@ export const ArticleParamsForm = () => {
 				[styles.container_open]: formOpen // добавляем container_open, если formOpen === true
 			})}> { /* <aside className={styles.container}> </aside> */}
 				<form className={styles.form}>
-					<h2>задайте параметры</h2>
+					<h2 style={{fontFamily: 'Open Sans', fontSize: '30px', fontWeight: 800, textTransform: 'uppercase', }}>задайте параметры</h2>
 					<Select 
 						selected = {fontFamilyOptions}
 						options = {articleProps.fontFamilyOptions}
 						onChange = {setFontFamilyOptions}
 						title = 'шрифт'
+					/>
+					<RadioGroup
+						name = {""}
+						options = {articleProps.fontSizeOptions}
+						selected = {optionType}
+						onChange = {setOptionType}
+						title = 'размер шрифта'
 					/>
 					<Select 
 						selected = {fontColors}
