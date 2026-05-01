@@ -10,6 +10,7 @@ import styles from './app.module.scss';
 
 import { useState } from 'react';
 
+
 type AppStyles = {
   [key: string]: string;
 };
@@ -25,19 +26,29 @@ export const App = () => {
   	});
 
 	// Преобразуем объекты OptionType в строки для CSS
-  const appliedStyles: AppStyles = {
+   const [appliedStyles, setAppliedStyles] = useState<AppStyles> ({
     '--font-family': styleParams['--font-family'].value,
     '--font-size': styleParams['--font-size'].value,
     '--font-color': styleParams['--font-color'].value,
     '--container-width': styleParams['--container-width'].value,
     '--bg-color': styleParams['--bg-color'].value,
-  };
+  });
 
 
 
 	const handleParamsChange = (newParams: typeof styleParams) => {setStyleParams(newParams);};
 
-	const handleSubmit = () => {};
+	const handleSubmit = () => {
+		// Преобразуем OptionType в строки только при submit
+		const newStyles: AppStyles = {
+		'--font-family': styleParams['--font-family'].value,
+		'--font-size': styleParams['--font-size'].value,
+		'--font-color': styleParams['--font-color'].value,
+		'--container-width': styleParams['--container-width'].value,
+		'--bg-color': styleParams['--bg-color'].value,
+		};
+		setAppliedStyles(newStyles);
+	};
 
 	return (
 		<main
