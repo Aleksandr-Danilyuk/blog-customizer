@@ -7,7 +7,7 @@ import { Text } from 'src/ui/text';
 import styles from './Article.module.scss';
 
 type Styles = {
-  [key: string]: string;
+	[key: string]: string;
 };
 
 export const Article = ({ styles: appliedStyles }: { styles: Styles }) => {
