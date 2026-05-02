@@ -22,7 +22,7 @@ export const ArticleParamsForm = ({
 	onSubmit,
 	onReset,
 }: {
-	currentParams: typeof defaultArticleState;
+	currentParams: Params;
 	onSubmit: (params: Params) => void;
 	onReset: () => void;
 }) => {
