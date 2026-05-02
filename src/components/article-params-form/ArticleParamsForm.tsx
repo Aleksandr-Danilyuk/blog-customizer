@@ -9,45 +9,25 @@ import { Text } from 'src/ui/text';
 import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
 
 import { useState, useEffect, useRef } from 'react';
-//import { AppStyles } from '../app/app';
 
 import * as articleProps from 'src/constants/articleProps';
 import { defaultArticleState } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 
-//type Params = {
-//	'--font-family': articleProps.OptionType;
-//	'--font-size': articleProps.OptionType;
-//	'--font-color': articleProps.OptionType;
-//	'--container-width': articleProps.OptionType;
-////	'--bg-color': articleProps.OptionType;
-//};
-
-
-
 type Params = typeof defaultArticleState;
-
-const convertParamsToStyles = (params: Params) => ({
-  '--font-family': params.fontFamilyOption.value,
-  '--font-size': params.fontSizeOption.value,
-  '--font-color': params.fontColor.value,
-  '--container-width': params.contentWidth.value,
-  '--bg-color': params.backgroundColor.value,
-});
 
 
 export const ArticleParamsForm = ({
 	currentParams,
-	onParamsChange,
 	onSubmit,
 	onReset
 }: {
 	currentParams: typeof defaultArticleState;
-	onParamsChange: (params: typeof defaultArticleState) => void;
 	onSubmit: (params: Params) => void;
 	onReset: () => void;
 }) => {
+	const [localParams, setLocalParams] = useState(currentParams);
 	const [isFormOpen, setFormOpen] = useState(false);
 	const formRef = useRef<HTMLElement>(null);
 	const buttonRef = useRef<HTMLDivElement>(null);
@@ -71,26 +51,18 @@ export const ArticleParamsForm = ({
 
 
 	const updateParam = (key: keyof Params, value: articleProps.OptionType) => {
-		const newParams = { ...currentParams, [key]: value };
-		onParamsChange(newParams);
+		const newParams = { ...localParams, [key]: value };
+		setLocalParams(newParams);
 	};
 
 	const handleReset = () => {
-		onReset(); // вызываем функцию сброса из App
+		setLocalParams(defaultArticleState); // сбрасываем локальные параметры до значений по умолчанию
+		onReset(); // вызываем сброс из App
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		// Преобразуем OptionType в строки только при submit
-		//const newStyles: AppStyles = {
-		//	'--font-family': currentParams['--font-family'].value,
-		//	'--font-size': currentParams['--font-size'].value,
-		//	'--font-color': currentParams['--font-color'].value,
-		//	'--container-width': currentParams['--container-width'].value,
-		//	'--bg-color': currentParams['--bg-color'].value,
-		//};
-		//onSubmit(newStyles);
-		onSubmit(currentParams);
+		onSubmit(localParams);
 	};
 
 	return (
@@ -116,44 +88,34 @@ export const ArticleParamsForm = ({
 						задайте параметры
 					</Text>
 					<Select
-						//selected={currentParams['--font-family']}
-						selected={currentParams.fontFamilyOption}
+						selected={localParams.fontFamilyOption}
 						options={articleProps.fontFamilyOptions}
-						//onChange={(optionType) => updateParam('--font-family', optionType)}
 						onChange={(optionType) => updateParam('fontFamilyOption', optionType)}
 						title='шрифт'
 					/>
 					<RadioGroup
 						name={'font-size'}
 						options={articleProps.fontSizeOptions}
-						//selected={currentParams['--font-size']}
-						//onChange={(optionType) => updateParam('--font-size', optionType)}
-						selected={currentParams.fontSizeOption}
+						selected={localParams.fontSizeOption}
 						onChange={(optionType) => updateParam('fontSizeOption', optionType)}
 						title='размер шрифта'
 					/>
 					<Select
-						//selected={currentParams['--font-color']}
-						selected={currentParams.fontColor}
+						selected={localParams.fontColor}
 						options={articleProps.fontColors}
-						//onChange={(optionType) => updateParam('--font-color', optionType)}
 						onChange={(optionType) => updateParam('fontColor', optionType)}
 						title='цвет шрифта'
 					/>
 					<Separator />
 					<Select
-						//selected={currentParams['--bg-color']}
-						selected={currentParams.backgroundColor}
+						selected={localParams.backgroundColor}
 						options={articleProps.backgroundColors}
-						//onChange={(optionType) => updateParam('--bg-color', optionType)}
 						onChange={(optionType) => updateParam('backgroundColor', optionType)}
 						title='цвет фона'
 					/>
 					<Select
-						//selected={currentParams['--container-width']}
-						selected={currentParams.contentWidth}
+						selected={localParams.contentWidth}
 						options={articleProps.contentWidthArr}
-						//onChange={(optionType) => updateParam('--container-width', optionType)}
 						onChange={(optionType) => updateParam('contentWidth', optionType)}
 						title='ширина контента'
 					/>
