@@ -17,11 +17,10 @@ import styles from './ArticleParamsForm.module.scss';
 
 type Params = typeof defaultArticleState;
 
-
 export const ArticleParamsForm = ({
 	currentParams,
 	onSubmit,
-	onReset
+	onReset,
 }: {
 	currentParams: typeof defaultArticleState;
 	onSubmit: (params: Params) => void;
@@ -32,13 +31,15 @@ export const ArticleParamsForm = ({
 	const formRef = useRef<HTMLElement>(null);
 	const buttonRef = useRef<HTMLDivElement>(null);
 
-	  // обработчик клика по документу
-  	useEffect(() => {
-    	const handleClickOutside = (event: MouseEvent) => {
-			if (formRef.current && 
+	// обработчик клика по документу
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			if (
+				formRef.current &&
 				!formRef.current.contains(event.target as Node) &&
-        		buttonRef.current &&
-        		!buttonRef.current.contains(event.target as Node)) {
+				buttonRef.current &&
+				!buttonRef.current.contains(event.target as Node)
+			) {
 				setFormOpen(false); // закрываем форму, если клик был вне сайдбара
 			}
 		};
@@ -48,7 +49,6 @@ export const ArticleParamsForm = ({
 			document.removeEventListener('click', handleClickOutside); // снимаем обработчик при размонтировании
 		};
 	}, []);
-
 
 	const updateParam = (key: keyof Params, value: articleProps.OptionType) => {
 		const newParams = { ...localParams, [key]: value };
@@ -80,17 +80,16 @@ export const ArticleParamsForm = ({
 				className={clsx(styles.container, {
 					[styles.container_open]: isFormOpen, // добавляем container_open, если isFormOpen === true
 				})}>
-				<form
-					className={styles.form}
-					onSubmit={handleSubmit}
-					>
+				<form className={styles.form} onSubmit={handleSubmit}>
 					<Text as='h2' size={31} weight={800} uppercase>
 						задайте параметры
 					</Text>
 					<Select
 						selected={localParams.fontFamilyOption}
 						options={articleProps.fontFamilyOptions}
-						onChange={(optionType) => updateParam('fontFamilyOption', optionType)}
+						onChange={(optionType) =>
+							updateParam('fontFamilyOption', optionType)
+						}
 						title='шрифт'
 					/>
 					<RadioGroup
@@ -110,7 +109,9 @@ export const ArticleParamsForm = ({
 					<Select
 						selected={localParams.backgroundColor}
 						options={articleProps.backgroundColors}
-						onChange={(optionType) => updateParam('backgroundColor', optionType)}
+						onChange={(optionType) =>
+							updateParam('backgroundColor', optionType)
+						}
 						title='цвет фона'
 					/>
 					<Select
@@ -124,7 +125,7 @@ export const ArticleParamsForm = ({
 							title='Сбросить'
 							htmlType='reset'
 							type='clear'
-							onClick={handleReset} 
+							onClick={handleReset}
 						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>

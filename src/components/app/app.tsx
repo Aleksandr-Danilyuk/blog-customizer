@@ -13,38 +13,33 @@ export type AppStyles = {
 
 // Связываем OptionType и стили
 const convertToCSSStyles = (params: typeof defaultArticleState) => ({
-  '--font-family': params.fontFamilyOption.value,
-  '--font-size': params.fontSizeOption.value,
-  '--font-color': params.fontColor.value,
-  '--container-width': params.contentWidth.value,
-  '--bg-color': params.backgroundColor.value,
+	'--font-family': params.fontFamilyOption.value,
+	'--font-size': params.fontSizeOption.value,
+	'--font-color': params.fontColor.value,
+	'--container-width': params.contentWidth.value,
+	'--bg-color': params.backgroundColor.value,
 });
-
 
 export const App = () => {
 	/* Используется поднятие состояния state lifting */
 	const [styleParams, setStyleParams] = useState(defaultArticleState);
 
-	
-  	const appliedStyles: AppStyles = convertToCSSStyles(styleParams);
+	const appliedStyles: AppStyles = convertToCSSStyles(styleParams);
 
 	const handleSubmit = (params: typeof defaultArticleState) => {
 		setStyleParams(params);
 	};
 
-
 	// Функция для сброса и применения стилей !!!
-  const handleReset = () => {
-	setStyleParams(defaultArticleState);
-  };
+	const handleReset = () => {
+		setStyleParams(defaultArticleState);
+	};
 
 	return (
-		<main
-			className={clsx(styles.main)}
-			style={appliedStyles as React.CSSProperties}>
+		<main className={clsx(styles.main)} style={appliedStyles as CSSProperties}>
 			<ArticleParamsForm
 				currentParams={styleParams}
-				onSubmit={handleSubmit} 
+				onSubmit={handleSubmit}
 				onReset={handleReset} // передаём функцию сброса в форму
 			/>
 			<Article styles={appliedStyles} />
