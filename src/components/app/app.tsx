@@ -7,7 +7,7 @@ import { defaultArticleState } from './../../constants/articleProps';
 
 import styles from './app.module.scss';
 
-type AppStyles = {
+export type AppStyles = {
 	[key: string]: string;
 };
 
@@ -36,17 +36,29 @@ export const App = () => {
 		setStyleParams(newParams);
 	};
 
-	const handleSubmit = () => {
-		// Преобразуем OptionType в строки только при submit
-		const newStyles: AppStyles = {
-			'--font-family': styleParams['--font-family'].value,
-			'--font-size': styleParams['--font-size'].value,
-			'--font-color': styleParams['--font-color'].value,
-			'--container-width': styleParams['--container-width'].value,
-			'--bg-color': styleParams['--bg-color'].value,
-		};
-		setAppliedStyles(newStyles);
-	};
+
+	// Функция для сброса и применения стилей !!!
+  const handleReset = () => {
+    // Сбрасываем на параметры по умолчанию
+    const defaultParams = {
+		'--font-family': defaultArticleState.fontFamilyOption,
+		'--font-size': defaultArticleState.fontSizeOption,
+		'--font-color': defaultArticleState.fontColor,
+		'--container-width': defaultArticleState.contentWidth,
+		'--bg-color': defaultArticleState.backgroundColor,
+    };
+    setStyleParams(defaultParams);
+
+    // Сразу применяем эти параметры как стили
+    const resetStyles: AppStyles = {
+      '--font-family': defaultParams['--font-family'].value,
+      '--font-size': defaultParams['--font-size'].value,
+      '--font-color': defaultParams['--font-color'].value,
+      '--container-width': defaultParams['--container-width'].value,
+      '--bg-color': defaultParams['--bg-color'].value,
+    };
+    setAppliedStyles(resetStyles);
+  };
 
 	return (
 		<main
@@ -55,7 +67,9 @@ export const App = () => {
 			<ArticleParamsForm
 				currentParams={styleParams}
 				onParamsChange={handleParamsChange}
-				onSubmit={handleSubmit}
+				onSubmit={setAppliedStyles}
+				//onSubmit={handleSubmit}
+				onReset={handleReset} // передаём функцию сброса в форму
 			/>
 			<Article styles={appliedStyles} />
 		</main>

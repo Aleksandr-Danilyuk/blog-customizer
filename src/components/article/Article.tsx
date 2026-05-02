@@ -5,12 +5,9 @@ import plane from 'src/images/plane.png';
 import { Text } from 'src/ui/text';
 
 import styles from './Article.module.scss';
+import { AppStyles } from '../app/app';
 
-type Styles = {
-	[key: string]: string;
-};
-
-export const Article = ({ styles: appliedStyles }: { styles: Styles }) => {
+export const Article = ({ styles: appliedStyles }: { styles: AppStyles }) => {
 	return (
 		<article className={clsx(styles.article)} style={appliedStyles}>
 			<Text as='h1' size={45} weight={800} uppercase dynamicLite>

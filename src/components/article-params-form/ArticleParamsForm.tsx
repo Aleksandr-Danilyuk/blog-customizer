@@ -5,12 +5,13 @@ import clsx from 'clsx';
 
 import { Separator } from 'src/ui/separator';
 import { Select } from 'src/ui/select';
+import { Text } from 'src/ui/text';
 import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { AppStyles } from '../app/app';
 
 import * as articleProps from 'src/constants/articleProps';
-
 
 import styles from './ArticleParamsForm.module.scss';
 
@@ -26,74 +27,79 @@ export const ArticleParamsForm = ({
 	currentParams,
 	onParamsChange,
 	onSubmit,
+	onReset
 }: {
 	currentParams: Params;
 	onParamsChange: (params: Params) => void;
-	onSubmit: () => void;
+	onSubmit: (styles: AppStyles) => void;
+	onReset: () => void;
 }) => {
-	const [formOpen, setFormOpen] = useState(false);
+	const [isFormOpen, setFormOpen] = useState(false);
+	const formRef = useRef<HTMLElement>(null);
+	const buttonRef = useRef<HTMLDivElement>(null);
+
+	  // обработчик клика по документу
+  	useEffect(() => {
+    	const handleClickOutside = (event: MouseEvent) => {
+			if (formRef.current && 
+				!formRef.current.contains(event.target as Node) &&
+        		buttonRef.current &&
+        		!buttonRef.current.contains(event.target as Node)) {
+				setFormOpen(false); // закрываем форму, если клик был вне сайдбара
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside, true); // устанавливаем обработчик
+		return () => {
+			document.removeEventListener('click', handleClickOutside); // снимаем обработчик при размонтировании
+		};
+	}, []);
+
 
 	const updateParam = (key: keyof Params, value: articleProps.OptionType) => {
 		const newParams = { ...currentParams, [key]: value };
 		onParamsChange(newParams);
 	};
-	/*
-	const [backgroundColors, setBackgroundColors] = useState<articleProps.OptionType>(articleProps.defaultArticleState.backgroundColor); 
-	const [contentWidthArr, setСontentWidthArr] = useState<articleProps.OptionType>(articleProps.defaultArticleState.contentWidth);
-	const [fontFamilyOptions, setFontFamilyOptions] = useState<articleProps.OptionType>(articleProps.defaultArticleState.fontFamilyOption);
-	const [fontColors, setFontColors] = useState<articleProps.OptionType>(articleProps.defaultArticleState.fontColor);
-	const [optionType, setOptionType] = useState<articleProps.OptionType>(articleProps.defaultArticleState.fontSizeOption);
-	
-	const [formOpen, setFormOpen] = useState(false);
 
-	const [extStyle, setExtStyle] = useState({currentParams});
-	setExtStyle({			
-			'--font-family': fontFamilyOptions,
-			'--font-size': optionType,
-			'--font-color': fontColors,
-			'--container-width': contentWidthArr,
-			'--bg-color': backgroundColors});
-*/
-	/* const [containerStyles, setContainerStyles] = useState(styles.container);
-/* --------   Мои элементы ----------   -placeholder = string ---  .container_open */
 	const handleReset = () => {
-		const defaultParams = {
-			'--font-family': articleProps.defaultArticleState.fontFamilyOption,
-			'--font-size': articleProps.defaultArticleState.fontSizeOption,
-			'--font-color': articleProps.defaultArticleState.fontColor,
-			'--container-width': articleProps.defaultArticleState.contentWidth,
-			'--bg-color': articleProps.defaultArticleState.backgroundColor,
+		onReset(); // вызываем функцию сброса из App
+	};
+
+	const handleSubmit = (e: React.FormEvent) => {
+		e.preventDefault();
+		// Преобразуем OptionType в строки только при submit
+		const newStyles: AppStyles = {
+			'--font-family': currentParams['--font-family'].value,
+			'--font-size': currentParams['--font-size'].value,
+			'--font-color': currentParams['--font-color'].value,
+			'--container-width': currentParams['--container-width'].value,
+			'--bg-color': currentParams['--bg-color'].value,
 		};
-		onParamsChange(defaultParams);
+		onSubmit(newStyles);
 	};
 
 	return (
 		<>
-			<ArrowButton
-				isOpen={formOpen}
-				onClick={() => {
-					setFormOpen(!formOpen);
-				}}
-			/>
+			<div ref={buttonRef}>
+				<ArrowButton
+					isOpen={isFormOpen}
+					onClick={() => {
+						setFormOpen(!isFormOpen);
+					}}
+				/>
+			</div>
 			<aside
+				ref={formRef} // привязываем реф к контейнеру формы
 				className={clsx(styles.container, {
-					[styles.container_open]: formOpen, // добавляем container_open, если formOpen === true
+					[styles.container_open]: isFormOpen, // добавляем container_open, если isFormOpen === true
 				})}>
 				<form
 					className={styles.form}
-					onSubmit={(e) => {
-						e.preventDefault();
-						onSubmit();
-					}}>
-					<h2
-						style={{
-							fontFamily: 'Open Sans',
-							fontSize: '30px',
-							fontWeight: 800,
-							textTransform: 'uppercase',
-						}}>
+					onSubmit={handleSubmit}
+					>
+					<Text as='h2' size={31} weight={800} uppercase>
 						задайте параметры
-					</h2>
+					</Text>
 					<Select
 						selected={currentParams['--font-family']}
 						options={articleProps.fontFamilyOptions}
@@ -101,7 +107,7 @@ export const ArticleParamsForm = ({
 						title='шрифт'
 					/>
 					<RadioGroup
-						name={''}
+						name={'font-size'}
 						options={articleProps.fontSizeOptions}
 						selected={currentParams['--font-size']}
 						onChange={(optionType) => updateParam('--font-size', optionType)}
@@ -128,45 +134,12 @@ export const ArticleParamsForm = ({
 						}
 						title='ширина контента'
 					/>
-					{/* 
-					<Select 
-						selected = {fontFamilyOptions}
-						options = {articleProps.fontFamilyOptions}
-						onChange = {setFontFamilyOptions}
-						title = 'шрифт'
-					/>
-					<RadioGroup
-						name = {""}
-						options = {articleProps.fontSizeOptions}
-						selected = {optionType}
-						onChange = {setOptionType}
-						title = 'размер шрифта'
-					/>
-					<Select 
-						selected = {fontColors}
-						options = {articleProps.fontColors}
-						onChange = {setFontColors}
-						title = 'цвет шрифта'
-					/>
-					<Separator />
-					<Select 
-						selected = {backgroundColors}
-						options = {articleProps.backgroundColors}
-						onChange = {setBackgroundColors}
-						title = 'цвет фона'
-					/>
-					<Select 
-						selected = {contentWidthArr}
-						options = {articleProps.contentWidthArr}
-						onChange = {setСontentWidthArr}
-						title = 'ширина контента'
-					/>*/}
 					<div className={styles.bottomContainer}>
 						<Button
 							title='Сбросить'
 							htmlType='reset'
 							type='clear'
-							onClick={handleReset}
+							onClick={handleReset} 
 						/>
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
