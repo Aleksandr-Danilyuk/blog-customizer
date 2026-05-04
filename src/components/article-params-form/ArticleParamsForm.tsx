@@ -17,12 +17,10 @@ import styles from './ArticleParamsForm.module.scss';
 
 export const ArticleParamsForm = ({
 	currentParams,
-	onSubmit,
-	onReset,
+	onApply,
 }: {
 	currentParams: ArticleStateType;
-	onSubmit: (params: ArticleStateType) => void;
-	onReset: () => void;
+	onApply: (params: ArticleStateType) => void;
 }) => {
 	const [localParams, setLocalParams] = useState(currentParams);
 	const [isFormOpen, setFormOpen] = useState(false);
@@ -54,13 +52,13 @@ export const ArticleParamsForm = ({
 	};
 
 	const handleReset = () => {
-		setLocalParams(defaultArticleState); // сбрасываем локальные параметры до значений по умолчанию
-		onReset(); // вызываем сброс из App
+		setLocalParams(defaultArticleState);
+		onApply(defaultArticleState);
 	};
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
-		onSubmit(localParams);
+		onApply(localParams);
 	};
 
 	return (

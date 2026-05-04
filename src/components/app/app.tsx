@@ -22,7 +22,7 @@ const convertToCSSStyles = (params: typeof defaultArticleState) => ({
 
 export const App = () => {
 	/* Используется поднятие состояния state lifting */
-	const [styleParams, setStyleParams] = useState(defaultArticleState);
+/*	const [styleParams, setStyleParams] = useState(defaultArticleState);
 
 	const appliedStyles: AppStyles = convertToCSSStyles(styleParams);
 
@@ -44,5 +44,18 @@ export const App = () => {
 			/>
 			<Article styles={appliedStyles} />
 		</main>
+	); */
+	const [articleState, setArticleState] = useState(defaultArticleState);
+	const appliedStyles: AppStyles = convertToCSSStyles(articleState);
+
+
+	return (
+		<main className={clsx(styles.main)}>
+			<ArticleParamsForm
+				currentParams={articleState} onApply={setArticleState}
+			/>
+			<Article styles={appliedStyles} />
+		</main>
 	);
+
 };
