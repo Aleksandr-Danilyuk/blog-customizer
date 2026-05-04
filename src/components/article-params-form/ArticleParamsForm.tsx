@@ -11,19 +11,17 @@ import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
 import { useState, useEffect, useRef } from 'react';
 
 import * as articleProps from 'src/constants/articleProps';
-import { defaultArticleState } from 'src/constants/articleProps';
+import { defaultArticleState, ArticleStateType } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
-
-type Params = typeof defaultArticleState;
 
 export const ArticleParamsForm = ({
 	currentParams,
 	onSubmit,
 	onReset,
 }: {
-	currentParams: Params;
-	onSubmit: (params: Params) => void;
+	currentParams: ArticleStateType;
+	onSubmit: (params: ArticleStateType) => void;
 	onReset: () => void;
 }) => {
 	const [localParams, setLocalParams] = useState(currentParams);
@@ -46,11 +44,11 @@ export const ArticleParamsForm = ({
 
 		document.addEventListener('click', handleClickOutside, true); // устанавливаем обработчик
 		return () => {
-			document.removeEventListener('click', handleClickOutside); // снимаем обработчик при размонтировании
+			document.removeEventListener('click', handleClickOutside, true); // снимаем обработчик при размонтировании
 		};
 	}, []);
 
-	const updateParam = (key: keyof Params, value: articleProps.OptionType) => {
+	const updateParam = (key: keyof ArticleStateType, value: articleProps.OptionType) => {
 		const newParams = { ...localParams, [key]: value };
 		setLocalParams(newParams);
 	};
