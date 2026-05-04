@@ -11,7 +11,10 @@ import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
 import { useState, useEffect, useRef } from 'react';
 
 import * as articleProps from 'src/constants/articleProps';
-import { defaultArticleState, ArticleStateType } from 'src/constants/articleProps';
+import {
+	defaultArticleState,
+	ArticleStateType,
+} from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 
@@ -46,7 +49,10 @@ export const ArticleParamsForm = ({
 		};
 	}, []);
 
-	const updateParam = (key: keyof ArticleStateType, value: articleProps.OptionType) => {
+	const updateParam = (
+		key: keyof ArticleStateType,
+		value: articleProps.OptionType
+	) => {
 		const newParams = { ...localParams, [key]: value };
 		setLocalParams(newParams);
 	};

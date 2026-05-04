@@ -21,41 +21,16 @@ const convertToCSSStyles = (params: typeof defaultArticleState) => ({
 });
 
 export const App = () => {
-	/* Используется поднятие состояния state lifting */
-/*	const [styleParams, setStyleParams] = useState(defaultArticleState);
-
-	const appliedStyles: AppStyles = convertToCSSStyles(styleParams);
-
-	const handleSubmit = (params: typeof defaultArticleState) => {
-		setStyleParams(params);
-	};
-
-	// Функция для сброса и применения стилей !!!
-	const handleReset = () => {
-		setStyleParams(defaultArticleState);
-	};
-
-	return (
-		<main className={clsx(styles.main)} style={appliedStyles as CSSProperties}>
-			<ArticleParamsForm
-				currentParams={styleParams}
-				onSubmit={handleSubmit}
-				onReset={handleReset} // передаём функцию сброса в форму
-			/>
-			<Article styles={appliedStyles} />
-		</main>
-	); */
 	const [articleState, setArticleState] = useState(defaultArticleState);
 	const appliedStyles: AppStyles = convertToCSSStyles(articleState);
 
-
 	return (
-		<main className={clsx(styles.main)}>
+		<main className={clsx(styles.main)} style={appliedStyles}>
 			<ArticleParamsForm
-				currentParams={articleState} onApply={setArticleState}
+				currentParams={articleState}
+				onApply={setArticleState}
 			/>
-			<Article styles={appliedStyles} />
+			<Article />
 		</main>
 	);
-
 };

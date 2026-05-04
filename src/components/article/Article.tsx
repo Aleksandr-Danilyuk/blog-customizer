@@ -6,13 +6,9 @@ import { Text } from 'src/ui/text';
 
 import styles from './Article.module.scss';
 
-export const Article = ({
-	styles: appliedStyles,
-}: {
-	styles: React.CSSProperties;
-}) => {
+export const Article = () => {
 	return (
-		<article className={clsx(styles.article)} style={appliedStyles}>
+		<article className={clsx(styles.article)}>
 			<Text as='h1' size={45} weight={800} uppercase dynamicLite>
 				Портрет Западной Швейцарии
 			</Text>
